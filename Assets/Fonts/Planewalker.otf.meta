@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 882721dcc54014dda9a9ddff02ee9bef
+timeCreated: 1503377873
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 60
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Planewalker
+  fontNames:
+  - Planewalker
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 0eeb80a0a69de40e79e47a34dac2bc2a, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

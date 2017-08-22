@@ -18,6 +18,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	public void toggleUI() {
+		Debug.Log("UI button clicked!");
 		startUI.SetActive (!startUI.activeSelf);
 		restartUI.SetActive (!restartUI.activeSelf);
 	}
