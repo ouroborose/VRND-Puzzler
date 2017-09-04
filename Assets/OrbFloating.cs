@@ -10,7 +10,8 @@ public class OrbFloating : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		yPosOriginal = transform.position.y;
+		yPosOriginal = transform.localPosition.y;
+//		Debug.Log (yPosOriginal);
 	}
 	
 	// Update is called once per frame
