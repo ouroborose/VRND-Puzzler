@@ -23,6 +23,7 @@ public class GameLogic : MonoBehaviour {
 	private int currentDisplayIndex = 0; //Temporary variable for storing the index when displaying the pattern
 	public bool currentlyDisplayingPattern = true;
 	private int currentSolveIndex = 0; //Temporary variable for storing the index that the player is solving for in the pattern.
+	public Material errorMaterial;
 
 	[Space(10)]
 
@@ -38,6 +39,8 @@ public class GameLogic : MonoBehaviour {
 	// Audio variables
 	[Header("Audio")]
 	public GameObject failAudioHolder;
+	public GameObject puzzleStartingAudioHolder;
+	public GameObject puzzleWinAudioHolder;
 
 
 	// Use this for initialization
@@ -96,14 +99,18 @@ public class GameLogic : MonoBehaviour {
 			
 		iTween.MoveTo (player, 
 			iTween.Hash (
-				"delay", 1,
+				"delay", 0.9,
 				"position", playPoint.transform.position, 
 				"time", timeToGameplay, 
-				"easetype", "linear"
+				"easetype", "linear",
+				"onComplete", "playStartPuzzleAudio",
+				"oncompletetarget", this.gameObject
 			)
 		);
+			
 		CancelInvoke ("displayPattern");
-		InvokeRepeating("displayPattern", 7, puzzleSpeed); //Start running through the displaypattern function
+
+		InvokeRepeating("displayPattern", 9, puzzleSpeed); //Start running through the displaypattern function
 		currentSolveIndex = 0; //Set our puzzle index at 0
 
 	}
@@ -159,6 +166,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	public void puzzleSuccess() { //Do this when the player gets it right
+		puzzleWinAudioHolder.GetComponent<GvrAudioSource> ().Play ();
 		iTween.MoveTo (player, 
 			iTween.Hash (
 				"position", restartPoint.transform.position, 
@@ -170,6 +178,21 @@ public class GameLogic : MonoBehaviour {
 
 	public void puzzleFailure() { //Do this when the player gets it wrong
 		Debug.Log("You've Failed, Resetting puzzle");
+
+		//makes puzzle spheres turn red
+		for (int i = 0; i < puzzleSpheres.Length; i++) { //Go through the puzzlespheres array
+			//puzzleSpheres[i].GetComponent<MeshRenderer>().material = errorMaterial;
+			iTween.ColorTo (puzzleSpheres[i], 
+				iTween.Hash (
+					"color", new Color(1, 0, 0), 
+					"time", 0.3,
+					"oncomplete", "orbsBackToOriginalColor",
+					"oncompletetarget", this.gameObject
+				)
+			);
+		}
+
+
 		failAudioHolder.GetComponent<GvrAudioSource> ().Play ();
 		currentSolveIndex = 0;
 		startPuzzle ();
@@ -179,6 +202,7 @@ public class GameLogic : MonoBehaviour {
 	public void finishingFlourish() { //A nice visual flourish when the player wins
 		//this.GetComponent<AudioSource>().Play(); //Play the success audio
 		//restartUI.SetActive (true);
+		puzzleWinAudioHolder.GetComponent<GvrAudioSource> ().Play ();
 		toggleUIStart();
 		playerWon = true;
 
@@ -195,6 +219,23 @@ public class GameLogic : MonoBehaviour {
 
 		//startUI.SetActive (!startUI.activeSelf);
 		//restartUI.SetActive (!restartUI.activeSelf);
+	}
+
+	public void playStartPuzzleAudio() {
+		Debug.Log ("Puzzle will now begin");
+		puzzleStartingAudioHolder.GetComponent<GvrAudioSource> ().Play ();
+	}
+
+	public void orbsBackToOriginalColor(){
+		for (int i = 0; i < puzzleSpheres.Length; i++) {
+			iTween.ColorTo (puzzleSpheres [i], 
+				iTween.Hash (
+					"color", new Color (1, 1, 1), 
+					"time", 0.3
+				)
+			);
+		}
+		
 	}
 
 }
